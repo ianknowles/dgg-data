@@ -23,7 +23,7 @@ def logging_setup():
 			with open(logging_config_filepath, 'r') as file:
 				config_dict = json.load(file)
 				time_stamp_string = datetime.datetime.now().isoformat().replace(':', '.')
-				time_stamp_filename = config_dict['handlers']['file']['filename'].replace('%', time_stamp_string)
+				time_stamp_filename = '{timestamp}.log'.format(timestamp=time_stamp_string)
 				log_filepath = os.path.join(log_path, time_stamp_filename)
 				config_dict['handlers']['file']['filename'] = log_filepath
 				logging.config.dictConfig(config_dict)
