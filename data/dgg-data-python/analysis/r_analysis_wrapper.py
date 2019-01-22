@@ -1,0 +1,110 @@
+"""Methods for running the R analysis script. Run this script to analyse today's collection"""
+import datetime
+import json
+import os
+
+from analysis import r_language
+from analysis.analysis_index import ModelIndexFile
+from storage.S3_bucket import S3Bucket
+from analysis.preprocessing import preprocess_analysis_data
+from dgg_log import logging_setup
+from dgg_log import root_logger
+
+from storage.dgg_file_structure import data_path
+from storage.dgg_file_structure import r_path
+
+logger = root_logger.getChild(__name__)
+
+appendix_csv_filepath = os.path.join(data_path, 'Appendix_table_model_predictions.csv')
+
+
+def cleanup_r_script_outputs():
+	"""Delete any previous outputs from the R script if present"""
+	try:
+		os.remove(appendix_csv_filepath)
+	except OSError:
+		pass
+
+	try:
+		os.remove(os.path.join(data_path, 'GroundTruth_correlations_table.csv'))
+	except OSError:
+		pass
+
+	try:
+		os.remove(os.path.join(r_path, 'Rplots.pdf'))
+		os.remove(os.path.join(r_path, 'Rplots1.pdf'))
+		os.remove(os.path.join(r_path, 'Rplots2.pdf'))
+		os.remove(os.path.join(r_path, 'Rplots3.pdf'))
+		os.remove(os.path.join(r_path, 'Rplots4.pdf'))
+	except OSError:
+		pass
+
+
+def predict(batch_string):
+	"""Run an analysis for the given day. Inputs are expected to be retrievable from S3"""
+	preprocess_analysis_data(batch_string)
+
+	s3_bucket = S3Bucket()
+
+	cleanup_r_script_outputs()
+
+	logger.info('Beginning analysis')
+	r_exe = r_language.RExecutable()
+	r_exe.run_script(os.path.join(r_path, 'Digital_gender_gaps_analysis.R'))
+	logger.info('Analysis complete')
+
+	with open(appendix_csv_filepath, 'rb') as countfile:
+		batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
+		key = '{folder}/monthly_model_{timestamp}.csv'.format(folder=batch_s3_folder, timestamp=batch_string)
+		s3_bucket.put(key, countfile)
+
+	# model index
+	index = ModelIndexFile(s3_bucket)
+	index.add_latest(batch_string, key)
+
+
+def catchup_analysis():
+	"""Run an analysis for any collections that haven't been analysed yet"""
+	import boto3
+
+	with open('S3_keys.json') as key_file:
+		s3_keys = json.load(key_file)
+		client = boto3.client('s3', **s3_keys)
+
+	paginator = client.get_paginator('list_objects')
+	result = paginator.paginate(Bucket='www.digitalgendergaps.org', Prefix='data/', Delimiter='/')
+	for prefix in result.search('CommonPrefixes'):
+		batch_string = prefix['Prefix'].split('/')[1]
+		try:
+			response = client.get_object(Bucket='www.digitalgendergaps.org', Key=prefix['Prefix'] + 'monthly_model.csv')
+		except client.exceptions.NoSuchKey:
+			try:
+				# TODO exceptions not for control flow, may be limited by boto3 available methods
+				predict(batch_string)
+			except Exception as e:
+				logger.error('Exception in batch {x}, {e}'.format(x=batch_string, e=e))
+
+
+def redo_analysis():
+	"""Run a new analysis for all datasets in the bucket"""
+	import boto3
+
+	with open('S3_keys.json') as key_file:
+		s3_keys = json.load(key_file)
+		client = boto3.client('s3', **s3_keys)
+
+	paginator = client.get_paginator('list_objects')
+	result = paginator.paginate(Bucket='www.digitalgendergaps.org', Prefix='data/', Delimiter='/')
+	for prefix in result.search('CommonPrefixes'):
+		batch_string = prefix['Prefix'].split('/')[1]
+		try:
+			predict(batch_string)
+		except Exception as e:
+			logger.error('Exception in batch {x}, {e}'.format(x=batch_string, e=e))
+
+
+if __name__ == "__main__":
+	logging_setup()
+
+	today_string = str(datetime.date.today().isoformat())
+	predict(today_string)
