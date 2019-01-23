@@ -1,5 +1,6 @@
 """Main script for the dgg-data-python package. Run to perform a collection and analysis for today."""
 import datetime
+import os
 
 from dgg_log import logging_setup
 from dgg_log import root_logger
@@ -34,6 +35,6 @@ if __name__ == "__main__":
 		raise e
 	finally:
 		with open(log_filepath, 'rb') as file:
-			key = '{folder}/{filename}'.format(folder=batch_s3_folder, filename=log_filepath)
+			key = '{folder}/{filename}'.format(folder=batch_s3_folder, filename=os.path.basename(log_filepath))
 			s3_bucket = S3Bucket()
 			s3_bucket.put(key, file)
