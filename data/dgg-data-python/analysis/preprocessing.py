@@ -39,7 +39,7 @@ def preprocess_counts_from_bucket(batch_string):
 		s3_bucket.put(key, countfile)
 
 
-def preprocess_counts(batch_string, estimates):
+def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 	"""Blank any missing data or ratios and write the facebook counts csv"""
 	ratios = {
 		'FB_age_13_14_ratio': {'agerange': '13-14', 'men': 'FB_age_13_14_men', 'women': 'FB_age_13_14_women'},
@@ -87,7 +87,6 @@ def preprocess_counts(batch_string, estimates):
 
 			for country_key in estimates:
 				country = estimates[country_key]
-				estimate = 'estimate_dau'
 				row = {'Country': country_key}
 				# TODO use estimate store
 				try:
