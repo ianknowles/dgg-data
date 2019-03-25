@@ -1,5 +1,6 @@
 """Class for collecting reach estimates from the Facebook Marketing API. Run to collect a dataset for today."""
 from collections import deque
+import csv
 import datetime
 import json
 import os
@@ -258,11 +259,14 @@ class FacebookCollection:
 			'limit': 1000,
 		}, api=self.backup_api)
 		print(user_devices)
-		with open(os.path.join(data_path, 'devices.json'), 'w') as file:
-			d = list(map(lambda x: x._data, user_devices))
+		with open(os.path.join(data_path, 'devices.json'), 'w') as file, open(os.path.join(data_path, 'devices.csv'), 'w', newline='') as csvfile:
+			d = list(filter(lambda x: x['type'] == 'user_device', map(lambda x: x._data, user_devices)))
 			# d2 = list(filter(lambda x: x['type'] == 'user_device', d))
 			d3 = {"root": d}
 			json.dump(d3, file)
+			csvwriter = csv.DictWriter(csvfile, fieldnames=d[0].keys())
+			csvwriter.writeheader()
+			csvwriter.writerows(d)
 
 		user_os = TargetingSearch.search(params={
 			'q': 'user_os',
@@ -270,9 +274,12 @@ class FacebookCollection:
 			'limit': 1000,
 		}, api=self.backup_api)
 		print(user_os)
-		with open(os.path.join(data_path, 'os.json'), 'w') as file:
-			d = list(map(lambda x: x._data, user_os))
+		with open(os.path.join(data_path, 'os.json'), 'w') as file, open(os.path.join(data_path, 'os.csv'), 'w', newline='') as csvfile:
+			d = list(filter(lambda x: x['type'] == 'user_os', map(lambda x: x._data, user_os)))
 			json.dump({"root": d}, file)
+			csvwriter = csv.DictWriter(csvfile, fieldnames=d[0].keys())
+			csvwriter.writeheader()
+			csvwriter.writerows(d)
 
 
 if __name__ == "__main__":
