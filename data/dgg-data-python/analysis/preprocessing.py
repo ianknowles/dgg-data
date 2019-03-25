@@ -205,10 +205,16 @@ def merge_counts_with_offline_dataset(batch_string):
 				isoalpha3 = id
 			row = next((country for country in data if country['ISO3Code'] == isoalpha3), None)
 			if row:
-				for key in row:
-					if key in count and key != 'Country':
-						row[key] = count[key]
-				data_out.append(row)
+				pop_ratio = float(count['FB_age_18_plus_ratio'])
+				if pop_ratio < 0.15:
+					logger.warning("Dropped country {iso}, population ratio too low. {ratio}".format(iso=count['Country'], ratio=pop_ratio))
+				elif pop_ratio > 1.85:
+					logger.warning("Dropped country {iso}, population ratio too high. {ratio}".format(iso=count['Country'], ratio=pop_ratio))
+				else:
+					for key in row:
+						if key in count and key != 'Country':
+							row[key] = count[key]
+					data_out.append(row)
 			else:
 				logger.warning("Dropped country {iso}, can't find a matching country in the offline dataset".format(iso=count['Country']))
 
