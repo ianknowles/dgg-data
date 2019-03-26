@@ -10,7 +10,7 @@ from dgg_log import root_logger
 logger = root_logger.getChild(__name__)
 
 
-def preprocess_counts_from_bucket(batch_string):
+def preprocess_counts_from_bucket(batch_string, estimate='mau'):
 	"""Retrieve a dataset from the bucket and create a csv file of the collected facebook counts"""
 	s3_bucket = S3Bucket()
 	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
@@ -29,9 +29,9 @@ def preprocess_counts_from_bucket(batch_string):
 
 	estimates = json.loads(response['Body'].read())
 
-	preprocess_counts(batch_string, estimates)
+	preprocess_counts(batch_string, estimates, estimate)
 
-	counts_csv_filename = 'counts_{timestamp}.csv'.format(timestamp=batch_string)
+	counts_csv_filename = '{estimate}_counts_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
 	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
 
 	with open(counts_csv_filepath, 'rb') as countfile:
@@ -39,7 +39,7 @@ def preprocess_counts_from_bucket(batch_string):
 		s3_bucket.put(key, countfile)
 
 
-def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
+def preprocess_counts(batch_string, estimates, estimate='mau'):
 	"""Blank any missing data or ratios and write the facebook counts csv"""
 	ratios = {
 		'FB_age_13_14_ratio': {'agerange': '13-14', 'men': 'FB_age_13_14_men', 'women': 'FB_age_13_14_women'},
@@ -74,7 +74,8 @@ def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 	logger.info('Beginning preprocessing for analysis for {date}'.format(date=batch_string))
 	blanking_value = ''
 
-	counts_csv_filename = 'counts_{timestamp}.csv'.format(timestamp=batch_string)
+	estimate_key = 'estimate_{key}'.format(key=estimate)
+	counts_csv_filename = '{estimate}_counts_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
 	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
 	try:
 		os.remove(counts_csv_filepath)
@@ -90,10 +91,10 @@ def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 				row = {'Country': country_key}
 				# TODO use estimate store
 				try:
-					row['FB_all'] = country['all']['18+'][estimate]
+					row['FB_all'] = country['all']['18+'][estimate_key]
 
-					row['FB_age_18_plus_men'] = country['men']['18+'][estimate]
-					row['FB_age_18_plus_women'] = country['women']['18+'][estimate]
+					row['FB_age_18_plus_men'] = country['men']['18+'][estimate_key]
+					row['FB_age_18_plus_women'] = country['women']['18+'][estimate_key]
 				except KeyError:
 					logger.error("Missing critical population ratio in {country}. 18+ population ratio not collected".format(country=country_key))
 					continue
@@ -111,8 +112,8 @@ def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 
 				for ratio, ratiokeys in ratios.items():
 					try:
-						row[ratiokeys['men']] = country['men'][ratiokeys['agerange']][estimate]
-						row[ratiokeys['women']] = country['women'][ratiokeys['agerange']][estimate]
+						row[ratiokeys['men']] = country['men'][ratiokeys['agerange']][estimate_key]
+						row[ratiokeys['women']] = country['women'][ratiokeys['agerange']][estimate_key]
 					except KeyError:
 						logger.warning("Ratio problem in {country}, {key} counts uncollected".format(country=country_key, key=ratio))
 						row[ratio] = blanking_value
@@ -130,7 +131,7 @@ def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 
 				for ratio, facebookkey in device_ratios.items():
 					try:
-						row[ratio] = country['women']['18+'][facebookkey][estimate] / country['men']['18+'][facebookkey][estimate]
+						row[ratio] = country['women']['18+'][facebookkey][estimate_key] / country['men']['18+'][facebookkey][estimate_key]
 					except ZeroDivisionError:
 						logger.warning("Ratio problem in {country}, {key} male user count is 0".format(country=country_key, key=facebookkey))
 						row[ratio] = blanking_value
@@ -142,14 +143,14 @@ def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 						row[ratio] = blanking_value
 
 				try:
-					row['FB_smartphone_owners_ratio'] = country['women']['18+']["SmartPhone Owners"][estimate] / country['men']['18+']["SmartPhone Owners"][estimate]
+					row['FB_smartphone_owners_ratio'] = country['women']['18+']["SmartPhone Owners"][estimate_key] / country['men']['18+']["SmartPhone Owners"][estimate_key]
 				except ZeroDivisionError:
 					logger.warning("Ratio problem in {country}, {key} male user count is 0".format(country=country_key, key='smartphones and tablets'))
 					row['FB_smartphone_owners_ratio'] = blanking_value
 				except KeyError:
 					try:
-						female_smartphone_owners = country['women']['18+']["Facebook access (mobile): smartphones and tablets"][estimate] - country['women']['18+']["Facebook access (mobile): tablets"][estimate]
-						male_smartphone_owners = country['men']['18+']["Facebook access (mobile): smartphones and tablets"][estimate] - country['men']['18+']["Facebook access (mobile): tablets"][estimate]
+						female_smartphone_owners = country['women']['18+']["Facebook access (mobile): smartphones and tablets"][estimate_key] - country['women']['18+']["Facebook access (mobile): tablets"][estimate_key]
+						male_smartphone_owners = country['men']['18+']["Facebook access (mobile): smartphones and tablets"][estimate_key] - country['men']['18+']["Facebook access (mobile): tablets"][estimate_key]
 						row['FB_smartphone_owners_ratio'] = female_smartphone_owners / male_smartphone_owners
 					except ZeroDivisionError:
 						logger.warning("Ratio problem in {country}, {key} male user count is 0".format(country=country_key, key='smartphones and tablets'))
@@ -170,11 +171,11 @@ def preprocess_counts(batch_string, estimates, estimate='estimate_mau'):
 				writer.writerow(row)
 
 
-def merge_counts_with_offline_dataset(batch_string):
+def merge_counts_with_offline_dataset(batch_string, estimate='mau'):
 	"""Merge the facebook counts csv with the offline dataset csv"""
 	s3_bucket = S3Bucket()
 	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
-	counts_csv_filename = 'counts_{timestamp}.csv'.format(timestamp=batch_string)
+	counts_csv_filename = '{estimate}_counts_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
 	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
 	dataset_csv_filepath = os.path.join(data_path, 'Digital_Gender_Gap_Dataset.csv')
 
@@ -222,12 +223,12 @@ def merge_counts_with_offline_dataset(batch_string):
 		writer.writerows(data_out)
 
 	with open(dataset_csv_filepath, 'rb') as countfile:
-		remote_dataset_csv_filename = 'Digital_Gender_Gap_Dataset_{timestamp}.csv'.format(timestamp=batch_string)
+		remote_dataset_csv_filename = '{estimate}_Digital_Gender_Gap_Dataset_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
 		key = '{folder}/{file}'.format(folder=batch_s3_folder, file=remote_dataset_csv_filename)
 		s3_bucket.put(key, countfile)
 
 
-def preprocess_analysis_data(batch_string):
+def preprocess_analysis_data(batch_string, estimate='mau'):
 	"""Create the facebook counts csv from a bucket dataset and then merge with the offline dataset csv"""
-	preprocess_counts_from_bucket(batch_string)
-	merge_counts_with_offline_dataset(batch_string)
+	preprocess_counts_from_bucket(batch_string, estimate)
+	merge_counts_with_offline_dataset(batch_string, estimate)

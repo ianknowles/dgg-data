@@ -40,9 +40,9 @@ def cleanup_r_script_outputs():
 		pass
 
 
-def predict(batch_string):
+def predict(batch_string, estimate='mau'):
 	"""Run an analysis for the given day. Inputs are expected to be retrievable from S3"""
-	preprocess_analysis_data(batch_string)
+	preprocess_analysis_data(batch_string, estimate)
 
 	s3_bucket = S3Bucket()
 
@@ -55,7 +55,7 @@ def predict(batch_string):
 
 	with open(appendix_csv_filepath, 'rb') as countfile:
 		batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
-		key = '{folder}/monthly_model_{timestamp}.csv'.format(folder=batch_s3_folder, timestamp=batch_string)
+		key = '{folder}/{estimate}_monthly_model_{timestamp}.csv'.format(estimate=estimate, folder=batch_s3_folder, timestamp=batch_string)
 		s3_bucket.put(key, countfile)
 
 	# model index
