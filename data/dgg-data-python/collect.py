@@ -26,7 +26,8 @@ if __name__ == "__main__":
 		session.create_target_queue()
 		session.collect()
 
-		r_analysis_wrapper.predict(date_stamp)
+		r_analysis_wrapper.predict(date_stamp, 'mau')
+		r_analysis_wrapper.predict(date_stamp, 'dau')
 
 		send_log(log_filepath, date_stamp)
 	except Exception as e:
