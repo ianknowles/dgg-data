@@ -110,3 +110,4 @@ if __name__ == "__main__":
 
 	today_string = str(datetime.date.today().isoformat())
 	predict(today_string)
+	predict(today_string, 'dau')
