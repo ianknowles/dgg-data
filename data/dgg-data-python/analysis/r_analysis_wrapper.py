@@ -12,10 +12,12 @@ from dgg_log import root_logger
 
 from storage.dgg_file_structure import data_path
 from storage.dgg_file_structure import r_path
+from storage.dgg_file_structure import auth_path
 
 logger = root_logger.getChild(__name__)
 
 appendix_csv_filepath = os.path.join(data_path, 'Appendix_table_model_predictions.csv')
+s3_auth = os.path.join(auth_path, 'S3_keys.json')
 
 
 def cleanup_r_script_outputs():
@@ -67,7 +69,7 @@ def catchup_analysis():
 	"""Run an analysis for any collections that haven't been analysed yet"""
 	import boto3
 
-	with open('S3_keys.json') as key_file:
+	with open(s3_auth) as key_file:
 		s3_keys = json.load(key_file)
 		client = boto3.client('s3', **s3_keys)
 
@@ -89,7 +91,7 @@ def redo_analysis():
 	"""Run a new analysis for all datasets in the bucket"""
 	import boto3
 
-	with open('S3_keys.json') as key_file:
+	with open(s3_auth) as key_file:
 		s3_keys = json.load(key_file)
 		client = boto3.client('s3', **s3_keys)
 
