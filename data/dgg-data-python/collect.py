@@ -9,6 +9,7 @@ from dgg_email import send_log
 from dgg_email import send_error_log
 
 from analysis import r_analysis_wrapper
+from analysis.analysis_index import ModelIndexFile
 from collection.facebook_collector import FacebookCollection
 from storage.S3_bucket import S3Bucket
 
@@ -26,8 +27,13 @@ if __name__ == "__main__":
 		session.create_target_queue()
 		session.collect()
 
-		r_analysis_wrapper.predict(date_stamp, 'mau')
+		mau_key = r_analysis_wrapper.predict(date_stamp, 'mau')
 		r_analysis_wrapper.predict(date_stamp, 'dau')
+
+		# model index
+		s3_bucket = S3Bucket()
+		index = ModelIndexFile(s3_bucket)
+		index.add_latest(date_stamp, mau_key)
 
 		send_log(log_filepath, date_stamp)
 	except Exception as e:
