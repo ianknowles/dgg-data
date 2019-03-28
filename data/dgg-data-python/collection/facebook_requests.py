@@ -45,40 +45,36 @@ age_ranges = [
 	{"age_min": 60}
 ]
 behaviors = [
-	{
-		"name": "All Mobile Devices",
-		"id": 6004382299972
-	},
-
-	{
-		"name": "All Android devices",
-		"id": 6004386044572
-	},
-
-	{
-		"name": "All iOS Devices",
-		"id": 6004384041172
-	},
-
-	{
-		"name": "Feature Phone",
-		"id": 6004383149972
-	},
-
-	{
-		"name": "iphone 7",
-		"id": 6060616578383
-	},
-
-	{
-		"name": "Facebook access (mobile): tablets",
-		"id": 6016286626383
-	},
-
-	{
-		"name": "Facebook access (mobile): smartphones and tablets",
-		"id": 6004383049972
-	}
+	{"name": "All Mobile Devices", "id": 6004382299972},
+	{"name": "All Android devices", "id": 6004386044572},
+	{"name": "All iOS Devices", "id": 6004384041172},
+	{"name": "Feature Phone", "id": 6004383149972},
+	{"name": "iphone 7", "id": 6060616578383},
+	{"id": 6002714898572, "name": "Small business owners"},
+	{"id": 6017253486583, "name": "Facebook access (network type): 2G"},
+	{"id": 6017253511583, "name": "Facebook access (network type): 3G"},
+	{"id": 6017253531383, "name": "Facebook access (network type): 4G"},
+	{"id": 6015235495383, "name": "Facebook access (network type): Wi-Fi"},
+	{"id": 6091658707783, "name": "Uses a mobile device (less than 1 month)"},
+	{"id": 6091658708183, "name": "Uses a mobile device (1-3 months)"},
+	{"id": 6091658512983, "name": "Uses a mobile device (4-6 months)"},
+	{"id": 6091658512183, "name": "Uses a mobile device (7-9 months)"},
+	{"id": 6091658540583, "name": "Uses a mobile device (10-12 months)"},
+	{"id": 6091658562383, "name": "Uses a mobile device (13-18 months)"},
+	{"id": 6091658651583, "name": "Uses a mobile device (19-24 months)"},
+	{"id": 6091658683183, "name": "Uses a mobile device (25 months+)"},
+	{"id": 6004384041172, "name": "Facebook access (mobile): Apple (iOS )devices"},
+	{"id": 6004386044572, "name": "Facebook access (mobile): Android devices"},
+	{"id": 6004383149972, "name": "Facebook access (mobile): feature phones"},
+	{"id": 6004382299972, "name": "Facebook access (mobile): all mobile devices"},
+	{"id": 6004383049972, "name": "Facebook access (mobile): smartphones and tablets"},
+	{"id": 6016286626383, "name": "Facebook access (mobile): tablets"},
+	{"id": 6015547900583, "name": "Facebook access (browser): Chrome"},
+	{"id": 6015593608983, "name": "Facebook access (browser): Safari"},
+	{"id": 6015547847583, "name": "Facebook access (browser): Firefox"},
+	{"id": 6055133998183, "name": "Facebook access (browser): Microsoft Edge"},
+	{"id": 6015593776783, "name": "Facebook access (browser): Internet Explorer"},
+	{"id": 6015593652183, "name": "Facebook access (browser): Opera"},
 ]
 
 
