@@ -4,7 +4,6 @@ import json
 import os
 
 from analysis import r_language
-from analysis.analysis_index import ModelIndexFile
 from storage.S3_bucket import S3Bucket
 from analysis.preprocessing import preprocess_analysis_data
 from dgg_log import logging_setup
@@ -60,9 +59,7 @@ def predict(batch_string, estimate='mau'):
 		key = '{folder}/{estimate}_monthly_model_{timestamp}.csv'.format(estimate=estimate, folder=batch_s3_folder, timestamp=batch_string)
 		s3_bucket.put(key, countfile)
 
-	# model index
-	index = ModelIndexFile(s3_bucket)
-	index.add_latest(batch_string, key)
+	return key
 
 
 def catchup_analysis():
