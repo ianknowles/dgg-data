@@ -1,6 +1,7 @@
 """Classes and functions for representing Facebook Marketing API requests and targeting data"""
 import copy
 import time
+import datetime
 
 
 class FacebookReachRequest:
@@ -118,3 +119,16 @@ def create_country_target_queue(alpha2):
 			params['targeting_spec']['behaviors'] = [behavior]
 			queue += [FacebookReachRequest(params)]
 	return queue
+
+
+if __name__ == "__main__":
+	total_countries = 246
+	queue = create_country_target_queue('US')
+	queue_size = len(queue)
+	print('QLen= {queue_size}'.format(queue_size=queue_size))
+	print('Estimated queue run time')
+	time = datetime.timedelta(seconds=(queue_size * total_countries * 0.67))
+	print(time)
+	print('Estimated queue run time')
+	time = datetime.timedelta(seconds=(1320 * total_countries * 0.67))
+	print(time)
