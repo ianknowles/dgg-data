@@ -883,7 +883,8 @@ colnames(Appendix_table) <- c("Country",
 
 write.csv(Appendix_table, "../data/Appendix_table_model_predictions.csv")
 
-
+further_analysis_for_paper <-
+  function(baseModel, varyName, candidVars, minCountries = 0) {
 # Table of number of countries can predict for broken down by Development/Income
 ## ------------------------------------------------------------------------- ##
 # breakdown for all countries in dataset
@@ -1111,3 +1112,4 @@ MobOnOffstepWiseResults <- build_model_with_greedy_stepwise_forward_2(data = dat
                                                                     errorMetric = "MSE", minCountries=20)
 MobOnOffstepWiseResults
 
+}
