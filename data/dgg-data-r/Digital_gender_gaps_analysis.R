@@ -19,6 +19,7 @@ library(pls) # for PCA
 library(reshape) # for aggregating the new data points 
 library(ggplot2)
 library(stringr)
+library(broom)
 
 ## Source the R scripts for data preprocessing and the required functions
 ## setwd("/Users/mjf6/Digital Gender Gap Code and Data_Feb_2018") # modify this appropriately
@@ -144,9 +145,13 @@ Internet_on_modelData <- data.frame(Internet_GG = datas$Internet_GG[I],
 Internet_online_model <- lm(Internet_GG ~ FB_GG_age_18_plus, Internet_on_modelData)
 print("The Internet GG Online Model")
 summary(Internet_online_model)
+Internet_online_model_coefs <- tidy(Internet_online_model)
+Internet_online_model_fit <- glance(Internet_online_model)
+Internet_online_model_fit[1, "Model"] <- "Internet_online_model"
+
 Mean_abs_error <- mean(abs(residuals(Internet_online_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
-
+Internet_online_model_fit[1, "Mean_abs_error"] <- Mean_abs_error
 
 # Compute Bootstrap standard errors of the coefficient estimates
 cat("\n\n Bootstrap Estimates of regression coefficient standard errors:\n")
@@ -175,6 +180,10 @@ error <- abs(Internet_on_modelData$Internet_GG - pred)
 error <- error/((abs(Internet_on_modelData$Internet_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Internet_online_model_fit[1, "smape"] <- error
+
+write.csv(Internet_online_model_coefs, "../data/Internet_online_model_coefs.csv")
+write.csv(Internet_online_model_fit, "../data/Internet_online_model_fit.csv")
 
 
 
@@ -199,8 +208,13 @@ finModel_variables <- build_model_with_greedy_stepwise_forward(
 Internet_Online_Offline_model <- lm(Internet_GG ~., finModel_variables)
 print("The Internet GG Online Offline Model")
 summary(Internet_Online_Offline_model)
+Internet_Online_Offline_model_coefs <- tidy(Internet_Online_Offline_model)
+Internet_Online_Offline_model_fit <- glance(Internet_Online_Offline_model)
+Internet_Online_Offline_model_fit[1, "Model"] <- "Internet_Online_Offline_model"
+
 Mean_abs_error <- mean(abs(residuals(Internet_Online_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
+Internet_Online_Offline_model_fit[1, "Mean_abs_error"] <- Mean_abs_error
 
 # For the purpose of reporting in the paper the model chosen above is refit
 # with standardized variables for each of interpretation of coefficients
@@ -218,6 +232,7 @@ Internet_onoff_modelData <- data.frame(Internet_GG = datas$Internet_GG[I],
 
 Internet_Online_Offline_model <- lm(Internet_GG ~., Internet_onoff_modelData)
 summary(Internet_Online_Offline_model)
+# TODO
 
 # Bootstrap estimates of the coefficient standard errors
 cat("\n\n Bootstrap Estimates of regression coefficient standard errors:\n")
@@ -257,8 +272,14 @@ error <- abs(Internet_onoff_modelData$Internet_GG - pred)
 error <- error/((abs(Internet_onoff_modelData$Internet_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Internet_Online_Offline_model_fit[1, "smape"] <- error
 
+write.csv(Internet_Online_Offline_model_coefs, "../data/Internet_Online_Offline_model_coefs.csv" )
+write.csv(Internet_Online_Offline_model_fit, "../data/Internet_Online_Offline_model_fit.csv" )
 
+fits <- rbind(Internet_online_model_fit, Internet_Online_Offline_model_fit)
+
+write.csv(fits, "../data/fit.csv" )
 
 
 ##                  The Internet Offline Regression Model
@@ -280,8 +301,13 @@ finModel_variables <- build_model_with_greedy_stepwise_forward(
 Internet_Offline_model <- lm(Internet_GG ~., finModel_variables)
 print("The Internet GG Offline Model")
 summary(Internet_Offline_model)
+Internet_Offline_model_coefs <- tidy(Internet_Offline_model)
+Internet_Offline_model_fit <- glance(Internet_Offline_model)
+Internet_Offline_model_fit[1, "Model"] <- "Internet_Offline_model"
+
 Mean_abs_error <- mean(abs(residuals(Internet_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
+Internet_Offline_model_fit[1, "Mean_abs_error"] <- Mean_abs_error
 
 # Refit above model with standardized values
 # for ease of interpretation of model coefficients
@@ -300,6 +326,7 @@ Internet_off_modelData <- data.frame(Internet_GG = datas$Internet_GG[I],
 Internet_Offline_model <- lm(Internet_GG ~., Internet_off_modelData)
 print("The Internet GG Offline Model")
 summary(Internet_Offline_model)
+#TODO
 
 # Bootstrap estimates of the coefficient standard errors
 bootestim <- boot(data = Internet_off_modelData, statistic = boot.fn, 
@@ -335,7 +362,14 @@ error <- abs(Internet_off_modelData$Internet_GG - pred)
 error <- error/((abs(Internet_off_modelData$Internet_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Internet_Offline_model_fit[1, "smape"] <- error
 
+write.csv(Internet_Offline_model_coefs, "../data/Internet_Offline_model_coefs.csv" )
+write.csv(Internet_Offline_model_fit, "../data/Internet_Offline_model_fit.csv" )
+
+fits <- rbind(fits, Internet_Offline_model_fit)
+
+write.csv(fits, "../data/fit.csv" )
 
 
 
@@ -358,9 +392,13 @@ Mobile_on_modelData = data.frame(Mobile_GG = datas$Mobile_GG[I],
 Mobile_Online_model <- lm(Mobile_GG ~ FB_GG_age_25_29,Mobile_on_modelData)
 print("The Mobile GG Online Model")
 summary(Mobile_Online_model)
+Mobile_Online_model_coefs <- tidy(Mobile_Online_model)
+Mobile_Online_model_fit <- glance(Mobile_Online_model)
+Mobile_Online_model_fit[1, "Model"] <- "Mobile_Online_model"
+
 Mean_abs_error <- mean(abs(residuals(Mobile_Online_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
-
+Mobile_Online_model_fit[1, "Mean_abs_error"] <- Mean_abs_error
 
 # Bootstrap estimates of the coefficient standard errors
 bootestim <- boot(data = Mobile_on_modelData, statistic = boot.fn, 
@@ -388,7 +426,14 @@ error <- abs(Mobile_on_modelData$Mobile_GG - pred)
 error <- error/((abs(Mobile_on_modelData$Mobile_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Mobile_Online_model_fit[1, "smape"] <- error
 
+write.csv(Mobile_Online_model_coefs, "../data/Mobile_Online_model_coefs.csv" )
+write.csv(Mobile_Online_model_fit, "../data/Mobile_Online_model_fit.csv" )
+
+fits <- rbind(fits, Mobile_Online_model_fit)
+
+write.csv(fits, "../data/fit.csv" )
 
 
 
@@ -414,9 +459,13 @@ finModel_variables <- build_model_with_greedy_stepwise_forward(
 Mobile_Online_Offline_model <- lm(Mobile_GG ~., finModel_variables)
 print("The Mobile GG Online Offline Model")
 summary(Mobile_Online_Offline_model)
+Mobile_Online_Offline_model_coefs <- tidy(Mobile_Online_Offline_model)
+Mobile_Online_Offline_model_fit <- glance(Mobile_Online_Offline_model)
+Mobile_Online_Offline_model_fit[1, "Model"] <- "Mobile_Online_Offline_model"
+
 Mean_abs_error <- mean(abs(residuals(Mobile_Online_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
-
+Mobile_Online_Offline_model_fit[1, "Mean_abs_error"] <- Mean_abs_error
 
 # Refit above model with standardized values for easier interpretation of
 # model coefficients.
@@ -433,7 +482,7 @@ Mobile_onoff_modelData <- data.frame(Mobile_GG = datas$Mobile_GG[I],
 Mobile_Online_Offline_model <- lm(Mobile_GG ~., Mobile_onoff_modelData)
 print("The Mobile GG Online Offline Model")
 summary(Mobile_Online_Offline_model)
-
+# TODO
 
 # Bootstrap estimates of the coefficient standard errors
 cat("\n\n Bootstrap Estimates of regression coefficient standard errors:\n")
@@ -469,7 +518,14 @@ error <- abs(Mobile_onoff_modelData$Mobile_GG - pred)
 error <- error/((abs(Mobile_onoff_modelData$Mobile_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Mobile_Online_Offline_model_fit[1, "smape"] <- error
 
+write.csv(Mobile_Online_Offline_model_coefs, "../data/Mobile_Online_Offline_model_coefs.csv" )
+write.csv(Mobile_Online_Offline_model_fit, "../data/Mobile_Online_Offline_model_fit.csv" )
+
+fits <- rbind(fits, Mobile_Online_Offline_model_fit)
+
+write.csv(fits, "../data/fit.csv" )
 
 # However, given the small amount of data the above model may be having too many
 # variables and potentially overfitting. So here we try to us Principle Component
@@ -482,6 +538,13 @@ XX <- data.frame(Mobile_GG = Mobile_onoff_modelData$Mobile_GG,
                  PCA.1 = model.pca$x[,1])
 model.lm <- lm(Mobile_GG ~ ., XX)
 summary(model.lm)
+Mobile_Online_Offline_model_coefs2 <- tidy(model.lm)
+Mobile_Online_Offline_model_fit2 <- glance(model.lm)
+Mobile_Online_Offline_model_fit2[1, "Model"] <- "Mobile_Online_Offline_model2"
+
+Mean_abs_error <- mean(abs(residuals(model.lm)))
+print(paste("Model Mean Absolute Error:",Mean_abs_error))
+Mobile_Online_Offline_model_fit2[1, "Mean_abs_error"] <- Mean_abs_error
 
 pred <- predict(model.lm)
 mean(abs(Mobile_onoff_modelData$Mobile_GG - pred))
@@ -492,6 +555,13 @@ XX <- data.frame(Mobile_GG = Mobile_onoff_modelData$Mobile_GG,
                  PCA.2 = model.pca$x[,2])
 model.lm <- lm(Mobile_GG ~ ., XX)
 summary(model.lm)
+Mobile_Online_Offline_model_coefs3 <- tidy(model.lm)
+Mobile_Online_Offline_model_fit3 <- glance(model.lm)
+Mobile_Online_Offline_model_fit3[1, "Model"] <- "Mobile_Online_Offline_model3"
+
+Mean_abs_error <- mean(abs(residuals(model.lm)))
+print(paste("Model Mean Absolute Error:",Mean_abs_error))
+Mobile_Online_Offline_model_fit3[1, "Mean_abs_error"] <- Mean_abs_error
 
 mean(abs(predict(model.lm) - Mobile_onoff_modelData$Mobile_GG))
 
@@ -526,6 +596,18 @@ error <- abs(Mobile_onoff_modelData$Mobile_GG - pred)
 error <- error/((abs(Mobile_onoff_modelData$Mobile_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Mobile_Online_Offline_model_fit2[1, "smape"] <- "NA"
+Mobile_Online_Offline_model_fit3[1, "smape"] <- error
+
+write.csv(Mobile_Online_Offline_model_coefs2, "../data/Mobile_Online_Offline_model_coefs2.csv" )
+write.csv(Mobile_Online_Offline_model_fit2, "../data/Mobile_Online_Offline_model_fit2.csv" )
+write.csv(Mobile_Online_Offline_model_coefs3, "../data/Mobile_Online_Offline_model_coefs3.csv" )
+write.csv(Mobile_Online_Offline_model_fit3, "../data/Mobile_Online_Offline_model_fit3.csv" )
+
+fits <- rbind(fits, Mobile_Online_Offline_model_fit2)
+fits <- rbind(fits, Mobile_Online_Offline_model_fit3)
+
+write.csv(fits, "../data/fit.csv" )
 
 # Bootstrap standard errors with the PCA model
 cat("\n\n Bootstrap Estimates of regression coefficient standard errors:\n")
@@ -562,9 +644,13 @@ Mobile_Offline_model <- lm(Mobile_GG ~ Multidimensional_poverty_index +
                              Is_South_Asia, Mobile_off_modelData)
 print("The Mobile GG Offline Model")
 summary(Mobile_Offline_model)
+Mobile_Offline_model_coefs <- tidy(Mobile_Offline_model)
+Mobile_Offline_model_fit <- glance(Mobile_Offline_model)
+Mobile_Offline_model_fit[1, "Model"] <- "Mobile_Offline_model"
+
 Mean_abs_error <- mean(abs(residuals(Mobile_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
-
+Mobile_Offline_model_fit[1, "Mean_abs_error"] <- Mean_abs_error
 
 # Bootstrap estimates of the coefficient standard errors
 cat("\n\n Bootstrap Estimates of regression coefficient standard errors:\n")
@@ -603,11 +689,19 @@ error <- abs(Mobile_off_modelData$Mobile_GG - pred)
 error <- error/((abs(Mobile_off_modelData$Mobile_GG)+abs(pred))/2)
 error <- sum(error)/length(pred)
 print(error)
+Mobile_Offline_model_fit[1, "smape"] <- error
+
+write.csv(Mobile_Offline_model_coefs, "../data/Mobile_Offline_model_coefs.csv" )
+write.csv(Mobile_Offline_model_fit, "../data/Mobile_Offline_model_fit.csv" )
+
+fits <- rbind(fits, Mobile_Offline_model_fit)
+
+write.csv(fits, "../data/fits.csv" )
 
 
 
-
-
+#further_analysis_for_paper <-
+#  function(baseModel, varyName, candidVars, minCountries = 0) {
 ## ------------------------------------------------------------------------- ##
 ##   Improving Model performance using Correction Factors
 ## ------------------------------------------------------------------------- ##
