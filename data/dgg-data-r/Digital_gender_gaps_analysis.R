@@ -147,6 +147,8 @@ print("The Internet GG Online Model")
 summary(Internet_online_model)
 Internet_online_model_coefs <- tidy(Internet_online_model)
 Internet_online_model_fit <- glance(Internet_online_model)
+Internet_online_model_fit[1, "n_samples"] <- nrow(model.frame(Internet_online_model))
+Internet_online_model_fit[1, "n_residuals"] <- length(resid(Internet_online_model))
 Internet_online_model_fit[1, "Model"] <- "Internet_online_model"
 
 Mean_abs_error <- mean(abs(residuals(Internet_online_model)))
@@ -211,6 +213,8 @@ summary(Internet_Online_Offline_model)
 Internet_Online_Offline_model_coefs <- tidy(Internet_Online_Offline_model)
 Internet_Online_Offline_model_fit <- glance(Internet_Online_Offline_model)
 Internet_Online_Offline_model_fit[1, "Model"] <- "Internet_Online_Offline_model"
+Internet_Online_Offline_model_fit[1, "n_samples"] <- nrow(model.frame(Internet_Online_Offline_model))
+Internet_Online_Offline_model_fit[1, "n_residuals"] <- length(resid(Internet_Online_Offline_model))
 
 Mean_abs_error <- mean(abs(residuals(Internet_Online_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
@@ -304,6 +308,8 @@ summary(Internet_Offline_model)
 Internet_Offline_model_coefs <- tidy(Internet_Offline_model)
 Internet_Offline_model_fit <- glance(Internet_Offline_model)
 Internet_Offline_model_fit[1, "Model"] <- "Internet_Offline_model"
+Internet_Offline_model_fit[1, "n_samples"] <- nrow(model.frame(Internet_Offline_model))
+Internet_Offline_model_fit[1, "n_residuals"] <- length(resid(Internet_Offline_model))
 
 Mean_abs_error <- mean(abs(residuals(Internet_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
@@ -395,6 +401,8 @@ summary(Mobile_Online_model)
 Mobile_Online_model_coefs <- tidy(Mobile_Online_model)
 Mobile_Online_model_fit <- glance(Mobile_Online_model)
 Mobile_Online_model_fit[1, "Model"] <- "Mobile_Online_model"
+Mobile_Online_model_fit[1, "n_samples"] <- nrow(model.frame(Mobile_Online_model))
+Mobile_Online_model_fit[1, "n_residuals"] <- length(resid(Mobile_Online_model))
 
 Mean_abs_error <- mean(abs(residuals(Mobile_Online_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
@@ -462,6 +470,8 @@ summary(Mobile_Online_Offline_model)
 Mobile_Online_Offline_model_coefs <- tidy(Mobile_Online_Offline_model)
 Mobile_Online_Offline_model_fit <- glance(Mobile_Online_Offline_model)
 Mobile_Online_Offline_model_fit[1, "Model"] <- "Mobile_Online_Offline_model"
+Mobile_Online_Offline_model_fit[1, "n_samples"] <- nrow(model.frame(Mobile_Online_Offline_model))
+Mobile_Online_Offline_model_fit[1, "n_residuals"] <- length(resid(Mobile_Online_Offline_model))
 
 Mean_abs_error <- mean(abs(residuals(Mobile_Online_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
@@ -540,7 +550,9 @@ model.lm <- lm(Mobile_GG ~ ., XX)
 summary(model.lm)
 Mobile_Online_Offline_model_coefs2 <- tidy(model.lm)
 Mobile_Online_Offline_model_fit2 <- glance(model.lm)
-Mobile_Online_Offline_model_fit2[1, "Model"] <- "Mobile_Online_Offline_model2"
+Mobile_Online_Offline_model_fit2[1, "Model"] <- "Mobile_Online_Offline_model_PCA1"
+Mobile_Online_Offline_model_fit2[1, "n_samples"] <- nrow(model.frame(model.lm))
+Mobile_Online_Offline_model_fit2[1, "n_residuals"] <- length(resid(model.lm))
 
 Mean_abs_error <- mean(abs(residuals(model.lm)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
@@ -557,7 +569,9 @@ model.lm <- lm(Mobile_GG ~ ., XX)
 summary(model.lm)
 Mobile_Online_Offline_model_coefs3 <- tidy(model.lm)
 Mobile_Online_Offline_model_fit3 <- glance(model.lm)
-Mobile_Online_Offline_model_fit3[1, "Model"] <- "Mobile_Online_Offline_model3"
+Mobile_Online_Offline_model_fit3[1, "Model"] <- "Mobile_Online_Offline_model_PCA1_PCA2"
+Mobile_Online_Offline_model_fit3[1, "n_samples"] <- nrow(model.frame(model.lm))
+Mobile_Online_Offline_model_fit3[1, "n_residuals"] <- length(resid(model.lm))
 
 Mean_abs_error <- mean(abs(residuals(model.lm)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
@@ -647,6 +661,8 @@ summary(Mobile_Offline_model)
 Mobile_Offline_model_coefs <- tidy(Mobile_Offline_model)
 Mobile_Offline_model_fit <- glance(Mobile_Offline_model)
 Mobile_Offline_model_fit[1, "Model"] <- "Mobile_Offline_model"
+Mobile_Offline_model_fit[1, "n_samples"] <- nrow(model.frame(Mobile_Offline_model))
+Mobile_Offline_model_fit[1, "n_residuals"] <- length(resid(Mobile_Offline_model))
 
 Mean_abs_error <- mean(abs(residuals(Mobile_Offline_model)))
 print(paste("Model Mean Absolute Error:",Mean_abs_error))
