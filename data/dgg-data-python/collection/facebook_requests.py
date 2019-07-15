@@ -44,12 +44,7 @@ age_ranges = [
 	{"age_min": 50},
 	{"age_min": 60}
 ]
-behaviors = [
-	{"name": "All Mobile Devices", "id": 6004382299972},
-	{"name": "All Android devices", "id": 6004386044572},
-	{"name": "All iOS Devices", "id": 6004384041172},
-	{"name": "Feature Phone", "id": 6004383149972},
-	{"name": "iphone 7", "id": 6060616578383},
+behaviors_default = [
 	{"id": 6002714898572, "name": "Small business owners"},
 	{"id": 6017253486583, "name": "Facebook access (network type): 2G"},
 	{"id": 6017253511583, "name": "Facebook access (network type): 3G"},
@@ -69,6 +64,7 @@ behaviors = [
 	{"id": 6004382299972, "name": "Facebook access (mobile): all mobile devices"},
 	{"id": 6004383049972, "name": "Facebook access (mobile): smartphones and tablets"},
 	{"id": 6016286626383, "name": "Facebook access (mobile): tablets"},
+	{"id": 6060616578383, "name": "iphone 7"},
 	{"id": 6015547900583, "name": "Facebook access (browser): Chrome"},
 	{"id": 6015593608983, "name": "Facebook access (browser): Safari"},
 	{"id": 6015547847583, "name": "Facebook access (browser): Firefox"},
