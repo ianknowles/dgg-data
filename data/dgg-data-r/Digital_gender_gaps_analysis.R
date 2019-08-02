@@ -21,16 +21,30 @@ library(ggplot2)
 library(stringr)
 library(broom)
 
+input_file = "../data/Digital_Gender_Gap_Dataset.csv"
+correlations_file = "../data/GroundTruth_correlations_table.csv"
+mobile_offline_model_coefs_file = "../data/Mobile_Offline_model_coefs.csv"
+mobile_offline_model_fit_file = "../data/Mobile_Offline_model_fit.csv"
+fits_file = "../data/fits.csv"
+model_predictions_file = "../data/Appendix_table_model_predictions.csv"
+
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) >= 1) {
+  input_file = args[1]
+}
+if (length(args) >= 2) {
+  model_predictions_file = args[2]
+}
+if (length(args) >= 3) {
+  correlations_file = args[3]
+}
+if (length(args) >= 4) {
+  fits_file = args[4]
+}
+
 ## Source the R scripts for data preprocessing and the required functions
-## setwd("/Users/mjf6/Digital Gender Gap Code and Data_Feb_2018") # modify this appropriately
 source("Data_preprocessing.R")
 source("functions.R")
-
-
-
-
-
-
 
 ## ------------------------------------------------------------------------- ##
 # Correlation Analysis with the Ground Truth Internet and Mobile Gender Gaps
@@ -51,8 +65,6 @@ variablesNames <- c("Internet_GG","Mobile_GG",
                     devIndicators_names,mobileVars_names,
                     GGIndicators_names,
                     FBAgeGG_names,FBDeviceGG_names)
-# name of the csv file to print the results to (include the .csv extension)
-file <- "../data/GroundTruth_correlations_table.csv"
 
 # ~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_ #
 # compute and store in this data frame the correlations of the variables with
@@ -115,17 +127,7 @@ for (i in 1:length(groundTruth)) {
 }
 
 # 
-write.csv(Paper_correlations_table,file)
-
-
-
-
-
-
-
-
-
-
+write.csv(Paper_correlations_table, correlations_file)
 
 
 ## ------------------------------------------------------------------------- ##
@@ -283,7 +285,7 @@ write.csv(Internet_Online_Offline_model_fit, "../data/Internet_Online_Offline_mo
 
 fits <- rbind(Internet_online_model_fit, Internet_Online_Offline_model_fit)
 
-write.csv(fits, "../data/fit.csv" )
+write.csv(fits, fits_file)
 
 
 ##                  The Internet Offline Regression Model
@@ -375,7 +377,7 @@ write.csv(Internet_Offline_model_fit, "../data/Internet_Offline_model_fit.csv" )
 
 fits <- rbind(fits, Internet_Offline_model_fit)
 
-write.csv(fits, "../data/fit.csv" )
+write.csv(fits, fits_file)
 
 
 
@@ -441,7 +443,7 @@ write.csv(Mobile_Online_model_fit, "../data/Mobile_Online_model_fit.csv" )
 
 fits <- rbind(fits, Mobile_Online_model_fit)
 
-write.csv(fits, "../data/fit.csv" )
+write.csv(fits, fits_file)
 
 
 
@@ -535,7 +537,7 @@ write.csv(Mobile_Online_Offline_model_fit, "../data/Mobile_Online_Offline_model_
 
 fits <- rbind(fits, Mobile_Online_Offline_model_fit)
 
-write.csv(fits, "../data/fit.csv" )
+write.csv(fits, fits_file)
 
 # However, given the small amount of data the above model may be having too many
 # variables and potentially overfitting. So here we try to us Principle Component
@@ -621,7 +623,7 @@ write.csv(Mobile_Online_Offline_model_fit3, "../data/Mobile_Online_Offline_model
 fits <- rbind(fits, Mobile_Online_Offline_model_fit2)
 fits <- rbind(fits, Mobile_Online_Offline_model_fit3)
 
-write.csv(fits, "../data/fit.csv" )
+write.csv(fits, fits_file)
 
 # Bootstrap standard errors with the PCA model
 cat("\n\n Bootstrap Estimates of regression coefficient standard errors:\n")
@@ -707,12 +709,12 @@ error <- sum(error)/length(pred)
 print(error)
 Mobile_Offline_model_fit[1, "smape"] <- error
 
-write.csv(Mobile_Offline_model_coefs, "../data/Mobile_Offline_model_coefs.csv" )
-write.csv(Mobile_Offline_model_fit, "../data/Mobile_Offline_model_fit.csv" )
+write.csv(Mobile_Offline_model_coefs, mobile_offline_model_coefs_file)
+write.csv(Mobile_Offline_model_fit, mobile_offline_model_fit_file)
 
 fits <- rbind(fits, Mobile_Offline_model_fit)
 
-write.csv(fits, "../data/fits.csv" )
+write.csv(fits, fits_file)
 
 
 
@@ -991,7 +993,7 @@ colnames(Appendix_table) <- c("Country",
                               "Mobile Online-Offline model prediction",
                               "Mobile Offline model prediction")
 
-write.csv(Appendix_table, "../data/Appendix_table_model_predictions.csv")
+write.csv(Appendix_table, model_predictions_file)
 
 further_analysis_for_paper <-
   function(baseModel, varyName, candidVars, minCountries = 0) {
