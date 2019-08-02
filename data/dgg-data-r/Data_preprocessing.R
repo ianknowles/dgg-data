@@ -15,12 +15,11 @@
 
 # read the dataset: years of publication, country codes and country names
 # are read as 'factor' while everything else is read as 'numeric'
-filename <- "../data/Digital_Gender_Gap_Dataset.csv"
 columnTypes <- c(rep('factor',6),'numeric',rep('factor',7),
                  rep('numeric',129),rep('factor',2),rep('numeric',4))
 
-# datas <- read.csv(filename, colClasses = columnTypes)
-datas <- read.csv(filename)
+# datas <- read.csv(input_file, colClasses = columnTypes)
+datas <- read.csv(input_file)
 
 # filter out countries that have FB or Internet population (reported by IWS)
 # counts of 20 as these are likely noise
