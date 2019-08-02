@@ -1,9 +1,10 @@
-"""Classes representing the analysis index file. Run this script to add today's analysis to the index"""
+"""Classes representing the analysis index file. Run this script to download all data"""
 import json
 import os
 
 from storage.S3_bucket import S3Bucket
 from storage.dgg_file_structure import data_path
+from storage.dgg_file_structure import project_path
 
 INDEX_LOCATION = 'data/models.json'
 
@@ -62,8 +63,31 @@ class ModelIndexFile:
 		with open(local_filepath, 'rb') as file:
 			self.bucket.put(INDEX_LOCATION, file)
 
+	def download_model(self, date, outputpath):
+		if date in self.models:
+			# store the filename in index
+			filename = self.models[date].split('/')[-1]
+			filepath = os.path.join(outputpath, filename)
+			with open(filepath, 'wb') as outputfile:
+				#TODO response checks
+				response = self.bucket.get(self.models[date])
+				while outputfile.write(response['Body'].read(amt=512)):
+					pass
 
-if __name__ == "__main__":
+	def download_all_models(self, outputpath):
+		for date in self.models:
+			# store the filename in index
+			filename = self.models[date].split('/')[-1]
+			filepath = os.path.join(outputpath, filename)
+			with open(filepath, 'wb') as outputfile:
+				#TODO response checks
+				response = self.bucket.get(self.models[date])
+				while outputfile.write(response['Body'].read(amt=512)):
+					pass
+
+
+def add_todays_model_example():
+	"""Example for adding latest analysis into the index, lacks checks and key format is old"""
 	import datetime
 
 	s3_bucket = S3Bucket()
@@ -72,3 +96,13 @@ if __name__ == "__main__":
 	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
 	key = '{folder}/monthly_model_{timestamp}.csv'.format(folder=batch_s3_folder, timestamp=batch_string)
 	index.add_latest(batch_string, key)
+
+
+if __name__ == "__main__":
+	s3_bucket = S3Bucket()
+	index = ModelIndexFile(s3_bucket)
+	data_test_path = os.path.join(project_path, 'data_download')
+	if not os.path.exists(data_test_path):
+		os.makedirs(data_test_path)
+	index.fetch()
+	index.download_all_models(data_test_path)
