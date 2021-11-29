@@ -1,0 +1,26 @@
+{
+	"version": 1,
+	"formatters": {
+		"dgg": {
+			"format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+		}
+	},
+	"handlers": {
+		"console": {
+			"class": "logging.StreamHandler",
+			"level": "DEBUG",
+			"formatter": "dgg"
+		},
+		"file": {
+			"class": "logging.FileHandler",
+			"level": "DEBUG",
+			"formatter": "dgg"
+		}
+	},
+	"loggers": {
+		"dgg": {
+			"level": "DEBUG",
+			"handlers": ["console", "file"]
+		}
+	}
+}
