@@ -81,4 +81,4 @@ class FacebookEstimateJsonStore:
 	def write_csv_file(self):
 		# TODO implementation
 		# TODO write a csv implementation of the store class and call its constructor here
-		print(self)
+		raise NotImplementedError
