@@ -28,7 +28,8 @@ def logging_setup():
 				config_dict['handlers']['file']['filename'] = log_filepath
 				logging.config.dictConfig(config_dict)
 		except EnvironmentError:
-			logger.error('Logging config is missing, please provide {logging_config_filepath} before continuing'.format(**locals()))
+			logger.error(f'Logging config is missing, please provide {logging_config_filepath} before continuing')
 			raise
-	logger.info('Log file initialised')
+	logger.info(f'Log file configured with {logging_config_filepath}')
+	logger.info(f'Logging to {log_filepath}')
 	return log_filepath
