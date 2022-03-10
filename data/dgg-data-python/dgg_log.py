@@ -6,7 +6,6 @@ import logging.config
 import os
 
 from storage.dgg_file_structure import config_path
-from storage.dgg_file_structure import log_path
 
 logging_config_filepath = os.path.join(config_path, 'log_config.json')
 root_logger = logging.getLogger('dgg')
@@ -15,7 +14,7 @@ logger = root_logger.getChild(__name__)
 
 # TODO log upload
 # TODO log cleanup?
-def logging_setup():
+def logging_setup(log_path):
 	"""Setup the loggers using a config file, return the filepath to .log file"""
 	log_filepath = ''
 	if not root_logger.hasHandlers():

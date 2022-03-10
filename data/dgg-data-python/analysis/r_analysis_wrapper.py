@@ -103,7 +103,9 @@ def redo_analysis():
 
 
 if __name__ == "__main__":
-	logging_setup()
+	from storage.dgg_file_structure import log_path
+	logging_setup(log_path)
+
 
 	today_string = str(datetime.date.today().isoformat())
 	predict(today_string)

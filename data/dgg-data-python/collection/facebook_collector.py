@@ -283,7 +283,8 @@ class FacebookCollection:
 
 
 if __name__ == "__main__":
-	logging_setup()
+	from storage.dgg_file_structure import log_path
+	logging_setup(log_path)
 	batch = str(datetime.date.today().isoformat())
 	session = FacebookCollection(batch)
 	session.create_target_queue()

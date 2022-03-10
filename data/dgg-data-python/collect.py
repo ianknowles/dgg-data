@@ -12,6 +12,7 @@ from analysis import r_analysis_wrapper
 from analysis.analysis_index import ModelIndexFile
 from collection.facebook_collector import FacebookCollection
 from storage.S3_bucket import S3Bucket
+from storage.dgg_file_structure import log_path
 
 logger = root_logger.getChild(__name__)
 
@@ -21,7 +22,7 @@ if __name__ == "__main__":
 	batch_s3_folder = 'data/{date_stamp}'.format(date_stamp=date_stamp)
 	log_filepath = ''
 	try:
-		log_filepath = logging_setup()
+		log_filepath = logging_setup(log_path)
 
 		session = FacebookCollection(date_stamp)
 		session.create_target_queue()
