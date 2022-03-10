@@ -15,28 +15,32 @@ from storage.dgg_file_structure import auth_path
 
 logger = root_logger.getChild(__name__)
 
-appendix_csv_filepath = os.path.join(data_path, 'Appendix_table_model_predictions.csv')
 s3_auth = os.path.join(auth_path, 'S3_keys.json')
 
 
-def cleanup_r_script_outputs():
+def cleanup_r_script_outputs(output_path):
 	"""Delete any previous outputs from the R script if present"""
 	try:
-		os.remove(appendix_csv_filepath)
+		os.remove(os.path.join(output_path, 'Appendix_table_model_predictions.csv'))
 	except OSError:
 		pass
 
 	try:
-		os.remove(os.path.join(data_path, 'GroundTruth_correlations_table.csv'))
+		os.remove(os.path.join(output_path, 'GroundTruth_correlations_table.csv'))
 	except OSError:
 		pass
 
 	try:
-		os.remove(os.path.join(r_path, 'Rplots.pdf'))
-		os.remove(os.path.join(r_path, 'Rplots1.pdf'))
-		os.remove(os.path.join(r_path, 'Rplots2.pdf'))
-		os.remove(os.path.join(r_path, 'Rplots3.pdf'))
-		os.remove(os.path.join(r_path, 'Rplots4.pdf'))
+		os.remove(os.path.join(output_path, 'Rplots.pdf'))
+		os.remove(os.path.join(output_path, 'Rplots1.pdf'))
+		os.remove(os.path.join(output_path, 'Rplots2.pdf'))
+		os.remove(os.path.join(output_path, 'Rplots3.pdf'))
+		os.remove(os.path.join(output_path, 'Rplots4.pdf'))
+	except OSError:
+		pass
+
+	try:
+		os.remove(os.path.join(output_path, 'fits.csv'))
 	except OSError:
 		pass
 
@@ -47,14 +51,14 @@ def predict(batch_string, estimate='mau'):
 
 	s3_bucket = S3Bucket()
 
-	cleanup_r_script_outputs()
+	cleanup_r_script_outputs(data_path)
 
 	logger.info('Beginning analysis')
 	r_exe = r_language.RExecutable()
 	r_exe.run_script(os.path.join(r_path, "Digital_gender_gaps_analysis.R"), '')
 	logger.info('Analysis complete')
 
-	with open(appendix_csv_filepath, 'rb') as countfile:
+	with open(os.path.join(data_path, 'Appendix_table_model_predictions.csv'), 'rb') as countfile:
 		batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
 		key = '{folder}/{estimate}_monthly_model_{timestamp}.csv'.format(estimate=estimate, folder=batch_s3_folder, timestamp=batch_string)
 		s3_bucket.put(key, countfile)
