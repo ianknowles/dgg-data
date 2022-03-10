@@ -51,3 +51,12 @@ class S3Folder:
 	def put(self, filename, file_body):
 		"""Puts a binary file stream into the bucket folder"""
 		self.bucket.put(urllib.parse.urljoin(self.path, filename), file_body)
+
+	def get(self, file_key):
+		"""Get an object from the given remote filepath"""
+		logger.info(f"Getting file '{file_key}' from {self.bucket}")
+		return self.bucket.get(urllib.parse.urljoin(self.path, file_key))
+
+	def get_folder(self, path):
+		"""Create a folder object representing a remote filepath in the bucket"""
+		return S3Folder(self.bucket, urllib.parse.urljoin(self.path, path))
