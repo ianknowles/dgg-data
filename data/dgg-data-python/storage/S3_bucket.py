@@ -24,20 +24,20 @@ class S3Bucket:
 		except EnvironmentError:
 			logger.error('S3 credentials missing')
 
-	def put(self, filepath, file_body):
+	def put(self, file_key, file_body):
 		"""Put a binary file stream into the bucket with the given remote filepath"""
 		# TODO exception handling
-		logger.info("Saving file '{file}' to {bucket}".format(file=filepath, bucket=self.bucket))
-		self.client.put_object(Bucket=self.bucket, Key=filepath, Body=file_body)
+		logger.info(f"Saving file '{file_key}' to {self.bucket}")
+		self.client.put_object(Bucket=self.bucket, Key=file_key, Body=file_body)
 
-	def get(self, filepath):
+	def get(self, file_key):
 		"""Get an object from the given remote filepath"""
-		logger.info("Getting file '{file}' from {bucket}".format(file=filepath, bucket=self.bucket))
-		return self.client.get_object(Bucket=self.bucket, Key=filepath)
+		logger.info(f"Getting file '{file_key}' from {self.bucket}")
+		return self.client.get_object(Bucket=self.bucket, Key=file_key)
 
-	def get_folder(self, key):
+	def get_folder(self, path):
 		"""Create a folder object representing a remote filepath in the bucket"""
-		return S3Folder(self, key)
+		return S3Folder(self, path)
 
 
 # TODO use folder
