@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
 		# model index
 		s3_bucket = S3Bucket()
-		index = ModelIndexFile(s3_bucket)
+		index = ModelIndexFile(s3_bucket, 'data/models.json')
 		index.add_latest(date_stamp, mau_key)
 
 		send_log(log_filepath, date_stamp)

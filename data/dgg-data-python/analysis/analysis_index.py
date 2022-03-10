@@ -6,13 +6,12 @@ from storage.S3_bucket import S3Bucket
 from storage.dgg_file_structure import data_path
 from storage.dgg_file_structure import project_path
 
-INDEX_LOCATION = 'data/models.json'
-
 
 class ModelIndexFile:
 	"""Represents the analysis index file, synchronising a local copy to the bucket"""
-	def __init__(self, bucket):
+	def __init__(self, bucket, path):
 		self.bucket = bucket
+		self.path = path
 		self.models = None
 
 	def add_entry(self, entry_date, entry_path):
@@ -47,7 +46,7 @@ class ModelIndexFile:
 	def fetch(self):
 		"""Get the latest copy of the index from the bucket"""
 		# TODO exception handling
-		response = self.bucket.get(INDEX_LOCATION)
+		response = self.bucket.get(self.path)
 		self.models = json.loads(response['Body'].read())
 
 	def store(self):
@@ -61,7 +60,7 @@ class ModelIndexFile:
 			json.dump(self.models, file)
 
 		with open(local_filepath, 'rb') as file:
-			self.bucket.put(INDEX_LOCATION, file)
+			self.bucket.put(self.path, file)
 
 	def download_model(self, date, outputpath):
 		if date in self.models:
@@ -91,7 +90,7 @@ def add_todays_model_example():
 	import datetime
 
 	s3_bucket = S3Bucket()
-	index = ModelIndexFile(s3_bucket)
+	index = ModelIndexFile(s3_bucket, 'data/monthly_models.json')
 	batch_string = str(datetime.date.today().isoformat())
 	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
 	key = '{folder}/monthly_model_{timestamp}.csv'.format(folder=batch_s3_folder, timestamp=batch_string)
@@ -100,7 +99,7 @@ def add_todays_model_example():
 
 if __name__ == "__main__":
 	s3_bucket = S3Bucket()
-	index = ModelIndexFile(s3_bucket)
+	index = ModelIndexFile(s3_bucket, 'data/models2.json')
 	data_test_path = os.path.join(project_path, 'data_download')
 	if not os.path.exists(data_test_path):
 		os.makedirs(data_test_path)
