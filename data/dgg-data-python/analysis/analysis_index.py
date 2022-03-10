@@ -48,6 +48,12 @@ class ModelIndexFile:
 		response = self.bucket.get(self.path)
 		self.models = json.loads(response['Body'].read())
 
+	def sort(self):
+		"""Sort the entries in the index by date"""
+		self.fetch()
+		self.models = dict(sorted(self.models.items()))
+		self.store()
+
 	def store(self):
 		"""Store the local index in the bucket"""
 		# TODO exception handling
