@@ -9,6 +9,7 @@ from storage.dgg_file_structure import project_path
 
 class ModelIndexFile:
 	"""Represents the analysis index file, synchronising a local copy to the bucket"""
+	# TODO needs local version or non-automatic that does not sync to the bucket
 	def __init__(self, bucket, path):
 		self.bucket = bucket
 		self.path = path
@@ -58,6 +59,7 @@ class ModelIndexFile:
 			json.dump(self.models, file)
 
 		with open(local_filepath, 'rb') as file:
+			# TODO warn if an existing index is being overwritten with an empty one?
 			self.bucket.put(self.path, file)
 
 	def download_model(self, date, outputpath):
