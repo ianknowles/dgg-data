@@ -12,7 +12,7 @@ class ModelIndexFile:
 	def __init__(self, bucket, path):
 		self.bucket = bucket
 		self.path = path
-		self.models = None
+		self.models = {}
 
 	def add_entry(self, entry_date, entry_path):
 		"""Add a new analysis to the index"""
@@ -35,13 +35,11 @@ class ModelIndexFile:
 
 	def add_local_entry(self, entry_date, entry_path):
 		"""Add an analysis to the local copy of the index without synchronising to the bucket"""
-		if self.models:
-			self.models[entry_date] = entry_path
+		self.models[entry_date] = entry_path
 
 	def update_local_latest(self, latest_path):
 		"""Update the local pointer to the latest analysis without synchronising to the bucket"""
-		if self.models:
-			self.models['latest'] = latest_path
+		self.models['latest'] = latest_path
 
 	def fetch(self):
 		"""Get the latest copy of the index from the bucket"""
