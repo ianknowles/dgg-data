@@ -51,7 +51,7 @@ def predict(batch_string, estimate='mau'):
 
 	logger.info('Beginning analysis')
 	r_exe = r_language.RExecutable()
-	r_exe.run_script(os.path.join(r_path, 'Digital_gender_gaps_analysis.R'))
+	r_exe.run_script(os.path.join(r_path, "Digital_gender_gaps_analysis.R"), '')
 	logger.info('Analysis complete')
 
 	with open(appendix_csv_filepath, 'rb') as countfile:

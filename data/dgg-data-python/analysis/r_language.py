@@ -16,12 +16,12 @@ class RExecutable:
 			logger.error(f'Cannot find R executable {self.filepath}')
 			raise FileNotFoundError
 
-	def run_script(self, script_filepath):
+	def run_script(self, script_filepath, args):
 		"""Run the given R script with the R executable and log its output"""
 		try:
 			logger.info(f'Running R script {os.path.basename(script_filepath)}')
 			# TODO RECHECK
-			p = subprocess.Popen([self.filepath, os.path.basename(script_filepath)], cwd=os.path.dirname(script_filepath), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+			p = subprocess.Popen([self.filepath, script_filepath] + args, cwd=os.path.dirname(script_filepath), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 			with p.stdout:
 				for line in iter(p.stdout.readline, b''):
 					decoded_line = line.decode('utf-8').strip('\n\r')
