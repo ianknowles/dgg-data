@@ -56,3 +56,17 @@ def redo_analysis():
 			predict(batch_string, 'dau')
 		except Exception as e:
 			logger.error('Exception in batch {x}, {e}'.format(x=batch_string, e=e))
+
+
+def redo_dates(dates):
+	from analysis.analysis_index import ModelIndexFile
+
+	s3_bucket = S3Bucket()
+	index = ModelIndexFile(s3_bucket, 'data/models2.json')
+	for date in dates:
+		try:
+			mau_key = predict(date)
+			index.add_entry(date, mau_key)
+			predict(date, 'dau')
+		except Exception as e:
+			logger.exception(f'Exception in batch {date}')
