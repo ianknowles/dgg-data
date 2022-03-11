@@ -11,15 +11,11 @@
 ## ----
 #  Script Parameters: Spceify the names of the sources of input and output files
 ## ----
-# Working directory
-#wd <- "C:\\Users\\QCRI-MASOOMALI\\Documents\\Project - Digital Gender Gaps\\DGG temporal trends\\model analysis"
-#setwd(wd)
 
 ## inputs
 # Online data -- FB counts and ratios
 args <- commandArgs(trailingOnly = TRUE)
 input_FB_counts <- args[1]
-#input_FB_counts <- "mau_counts_2019-09-30.csv"
 FB_data_id_col <- "Country"
 
 # Offline data -- Offline variables, GGI and HDI
