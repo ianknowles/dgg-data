@@ -192,7 +192,7 @@ datas <- merge(x = offline_data, y = FB_data,
 
 ## Determine which year of data to use for the variables of interest
 # year is inferred from the time-stamp on the FB data 
-current_year <- as.numeric(gsub(".*mau_counts_([0-9]{4})-[0-9]{2}-[0-9]{2}.csv", "\\1", input_FB_counts))
+current_year <- as.numeric(gsub(".*_counts_([0-9]{4})-[0-9]{2}-[0-9]{2}.csv", "\\1", input_FB_counts))
 
 # for Offline sex ratios we used data from current year
 for (varName in c(offline_sex_ratio_variables)) { 
