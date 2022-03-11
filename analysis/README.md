@@ -7,6 +7,8 @@ A python 3.6+ virtual environment is set up and the `pycountry` package is downl
 
 R 3.5 is installed in windows. (Further work to be done to switch to a modern R wrapper with linux support)
 
+S3 access keys giving at least read permission to the bucket saved in `data/auth/S3_keys.json`. (Count files are not intended to be shared so fetching the should always require some authorisation).
+
 ## Input files
 `DGG_Offline_dataset_compiled_Nov_2019.csv`, provided in folder `input`
 
