@@ -18,6 +18,7 @@ S3 access keys giving at least read permission to the bucket saved in `data/auth
 `generate_monthly_averages` reads all csv files in a month folder e.g. `2022-02` under `input/counts` and averages each variable collected across the month and stores it in memory in the json estimates format.
 
 This is then passed to `preprocess_counts` which calculates ratios of age ranges and device use (see function for list of ratios).
+https://github.com/ianknowles/dgg-data/blob/0542f26fd493fa87e6047e894d3e5eadf44c1812/analysis/source/preprocessing.py#L63-L97
 
 A composite csv is saved in `input/counts` with the averaged values and calculated ratios e.g. `mau_monthly_counts_2022-02-01.csv`.
 
