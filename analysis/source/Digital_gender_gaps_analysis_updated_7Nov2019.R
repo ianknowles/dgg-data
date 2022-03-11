@@ -19,7 +19,7 @@ input_FB_counts <- args[1]
 FB_data_id_col <- "Country"
 
 # Offline data -- Offline variables, GGI and HDI
-input_offline_variables <-  "DGG_Offline_dataset_compiled_Nov_2019.csv"
+input_offline_variables <-  "../input/DGG_Offline_dataset_compiled_Nov_2019.csv"
 offline_data_id_col <- "two_digit_code" # or alternatively "ISO3Code" for three digit code
 
 # Ground truth data column names 
@@ -29,13 +29,14 @@ internet_gg_gtruth_col <- NULL
 mobile_gg_gtruth_col <- NULL
 
 # Prediction Models
-internet_GG_models_file <- "models/Internet_GG_models_selected_by_stepwise_cv_smape.RData"
-mobile_GG_models_file <- "models/Mobile_GG_models_selected_by_stepwise_cv_smape.RData"
+internet_GG_models_file <- "../models/Internet_GG_models_selected_by_stepwise_cv_smape.RData"
+mobile_GG_models_file <- "../models/Mobile_GG_models_selected_by_stepwise_cv_smape.RData"
 
 ## output files
-model_predictions_file <- "../data/Appendix_table_model_predictions.csv"
-correlations_file <- "../data/GroundTruth_correlations_table.csv"
-fits_file <- "../data/fits.csv"
+output_path <- args[2]
+model_predictions_file <- file.path(output_path, "Appendix_table_model_predictions.csv", fsep = "\\")
+correlations_file <- file.path(output_path, "GroundTruth_correlations_table.csv", fsep = "\\")
+fits_file <- file.path(output_path, "fits.csv", fsep = "\\")
 
 ## ----
 #  Helper functions
