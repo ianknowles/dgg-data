@@ -13,7 +13,7 @@ logger = root_logger.getChild(__name__)
 def get_bucket_estimates(batch_string):
 	"""Retrieve a dataset from the bucket and create a csv file of the collected facebook counts"""
 	s3_bucket = S3Bucket()
-	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
+	batch_s3_folder = f'data/{batch_string}'
 	try:
 		response = s3_bucket.get('{folder}/store_{timestamp}.json'.format(folder=batch_s3_folder, timestamp=batch_string))
 	except s3_bucket.client.exceptions.NoSuchKey:
@@ -35,14 +35,14 @@ def preprocess_counts_from_bucket(batch_string, estimate='mau'):
 
 	estimates1 = get_bucket_estimates(batch_string)
 
-	counts_csv_filename = '{estimate}_counts_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
+	counts_csv_filename = f'{estimate}_counts_{batch_string}.csv'
 	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
 
 	preprocess_counts(batch_string, counts_csv_filepath, estimates1, estimate)
 
 	s3_bucket = S3Bucket()
 	with open(counts_csv_filepath, 'rb') as countfile:
-		key = '{folder}/{file}'.format(folder=batch_s3_folder, file=counts_csv_filename)
+		key = f'data/{batch_string}/{counts_csv_filename}'
 		s3_bucket.put(key, countfile)
 
 
