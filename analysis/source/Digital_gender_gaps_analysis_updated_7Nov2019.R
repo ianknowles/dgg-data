@@ -17,7 +17,7 @@
 
 ## inputs
 # Online data -- FB counts and ratios
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly = TRUE)
 input_FB_counts <- args[1]
 #input_FB_counts <- "mau_counts_2019-09-30.csv"
 FB_data_id_col <- "Country"
@@ -112,15 +112,15 @@ r.squared <- function(pred_df, gtruth_col, pred_col) {
 #  Setup script variables
 ## ----
 # FB age groups
-ageGroups = c("age_18_plus",
-              "age_15_19","age_20_24","age_25_29",
-              "age_30_34","age_35_39","age_40_44",
-              "age_45_49","age_50_54","age_55_59",
-              "age_60_64",
-              "age_65_plus","age_18_23",
-              "age_20_plus","age_20_64","age_21_plus",
-              "age_25_plus","age_25_49","age_25_64",
-              "age_50_plus","age_60_plus")
+ageGroups <- c("age_18_plus",
+               "age_15_19", "age_20_24", "age_25_29",
+               "age_30_34", "age_35_39", "age_40_44",
+               "age_45_49", "age_50_54", "age_55_59",
+               "age_60_64",
+               "age_65_plus", "age_18_23",
+               "age_20_plus", "age_20_64", "age_21_plus",
+               "age_25_plus", "age_25_49", "age_25_64",
+               "age_50_plus", "age_60_plus")
 
 # FB device users
 FBdevices <- c("android_device_users",
