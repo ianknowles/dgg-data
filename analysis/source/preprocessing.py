@@ -46,6 +46,17 @@ def preprocess_counts_from_bucket(batch_string, estimate='mau'):
 		s3_bucket.put(key, countfile)
 
 
+def preprocess_counts_from_local(batch_string, estimate='mau'):
+	store_filename = f'store_{batch_string}.json'
+	store_filepath = os.path.join(data_path, store_filename)
+
+	counts_csv_filename = f'{estimate}_counts_{batch_string}.csv'
+	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
+
+	with open(store_filepath, 'r') as storefile:
+		estimates = json.load(storefile)
+		preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate)
+
 
 def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='mau'):
 	"""Blank any missing data or ratios and write the facebook counts csv"""
