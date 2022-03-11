@@ -105,6 +105,7 @@ def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='ma
 					logger.error("Missing critical population ratio in {country}. 18+ population ratio not collected".format(country=country_key))
 					continue
 				try:
+					row['FB_age_18_plus_ratio'] = 0
 					row['FB_age_18_plus_ratio'] = row['FB_age_18_plus_women'] / row['FB_age_18_plus_men']
 				except ZeroDivisionError:
 					logger.error("Missing critical population ratio in {country}. Male 18+ user count is 0. Dropping country from analysis".format(country=country_key))
