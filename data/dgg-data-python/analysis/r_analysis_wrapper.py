@@ -57,10 +57,13 @@ def predict(batch_string, estimate='mau'):
 	r_exe.run_script(os.path.join(r_path, "Digital_gender_gaps_analysis.R"), '')
 	logger.info('Analysis complete')
 
-	with open(os.path.join(data_path, 'Appendix_table_model_predictions.csv'), 'rb') as countfile:
-		batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
-		key = '{folder}/{estimate}_monthly_model_{timestamp}.csv'.format(estimate=estimate, folder=batch_s3_folder, timestamp=batch_string)
-		s3_bucket.put(key, countfile)
+	batch_s3_folder = f'data/{batch_string}'
+	key = ''
+	with open(os.path.join(data_path, 'Appendix_table_model_predictions.csv'), 'rb') as file:
+		filename = f'{estimate}_monthly_model_{batch_string}.csv'
+		key = f'{batch_s3_folder}/{filename}'
+		s3_bucket.put(key, file)
+		logger.info(f'Uploaded {filename}')
 
 	return key
 
