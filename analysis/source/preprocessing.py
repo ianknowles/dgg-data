@@ -44,6 +44,11 @@ def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='ma
 	"""Blank any missing data or ratios and write the facebook counts csv"""
 	ratios = {
 		'FB_age_13_14_ratio': {'agerange': '13-14', 'men': 'FB_age_13_14_men', 'women': 'FB_age_13_14_women'},
+		'FB_age_14_15_ratio': {'agerange': '14-15', 'men': 'FB_age_14_15_men', 'women': 'FB_age_14_15_women'},
+		'FB_age_15_16_ratio': {'agerange': '15-16', 'men': 'FB_age_15_16_men', 'women': 'FB_age_15_16_women'},
+		'FB_age_16_17_ratio': {'agerange': '16-17', 'men': 'FB_age_16_17_men', 'women': 'FB_age_16_17_women'},
+		'FB_age_17_18_ratio': {'agerange': '17-18', 'men': 'FB_age_17_18_men', 'women': 'FB_age_17_18_women'},
+		'FB_age_18_19_ratio': {'agerange': '18-19', 'men': 'FB_age_18_19_men', 'women': 'FB_age_18_19_women'},
 		'FB_age_15_19_ratio': {'agerange': '15-19', 'men': 'FB_age_15_19_men', 'women': 'FB_age_15_19_women'},
 		'FB_age_20_24_ratio': {'agerange': '20-24', 'men': 'FB_age_20_24_men', 'women': 'FB_age_20_24_women'},
 		'FB_age_25_29_ratio': {'agerange': '25-29', 'men': 'FB_age_25_29_men', 'women': 'FB_age_25_29_women'},
