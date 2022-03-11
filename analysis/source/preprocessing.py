@@ -90,7 +90,8 @@ def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='ma
 	with open(counts_csv_filepath, 'w', newline='') as csvfile:
 		if estimates:
 			writer = None
-
+			outputrows = []
+			headerkeys = []
 			for country_key in estimates:
 				country = estimates[country_key]
 				row = {'Country': country_key}
@@ -170,10 +171,14 @@ def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='ma
 					logger.warning("Ratio problem in {country}, {key} female user count is 0".format(country=country_key, key='smartphones and tablets'))
 					row['FB_smartphone_owners_ratio'] = blanking_value
 
-				if not writer:
-					writer = csv.DictWriter(csvfile, fieldnames=row.keys())
-					writer.writeheader()
-				writer.writerow(row)
+				outputrows.append(row)
+				for col in row:
+					if col not in headerkeys:
+						headerkeys.append(col)
+			writer = csv.DictWriter(csvfile, fieldnames=headerkeys)
+			writer.writeheader()
+			writer.writerows(outputrows)
+			logger.info(f'Preprocessing counts file written to {counts_csv_filepath}')
 
 
 def merge_counts_with_offline_dataset(batch_string, estimate='mau', offline_file=os.path.join(data_path, 'Digital_gender_gap_dataset_updated_ITU_data.csv')):
