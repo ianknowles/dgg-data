@@ -39,7 +39,8 @@ def preprocess_counts_from_bucket(batch_string, estimate='mau'):
 		s3_bucket.put(key, countfile)
 
 
-def preprocess_counts(batch_string, estimates, estimate='mau'):
+
+def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='mau'):
 	"""Blank any missing data or ratios and write the facebook counts csv"""
 	ratios = {
 		'FB_age_13_14_ratio': {'agerange': '13-14', 'men': 'FB_age_13_14_men', 'women': 'FB_age_13_14_women'},
@@ -75,8 +76,7 @@ def preprocess_counts(batch_string, estimates, estimate='mau'):
 	blanking_value = ''
 
 	estimate_key = 'estimate_{key}'.format(key=estimate)
-	counts_csv_filename = '{estimate}_counts_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
-	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
+
 	try:
 		os.remove(counts_csv_filepath)
 	except OSError:
@@ -171,7 +171,7 @@ def preprocess_counts(batch_string, estimates, estimate='mau'):
 				writer.writerow(row)
 
 
-def merge_counts_with_offline_dataset(batch_string, estimate='mau'):
+def merge_counts_with_offline_dataset(batch_string, estimate='mau', offline_file=os.path.join(data_path, 'Digital_gender_gap_dataset_updated_ITU_data.csv')):
 	"""Merge the facebook counts csv with the offline dataset csv"""
 	s3_bucket = S3Bucket()
 	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
@@ -184,7 +184,7 @@ def merge_counts_with_offline_dataset(batch_string, estimate='mau'):
 	except OSError:
 		pass
 
-	with open(os.path.join(data_path, 'Digital_gender_gap_dataset_updated_ITU_data.csv'), 'r') as datafile, open(counts_csv_filepath, 'r') as countfile, open(dataset_csv_filepath, 'w', newline='') as outfile:
+	with open(offline_file, 'r') as datafile, open(counts_csv_filepath, 'r') as countfile, open(dataset_csv_filepath, 'w', newline='') as outfile:
 		data_reader = csv.DictReader(datafile)
 		data = list(data_reader)
 		# data = {rows[0]:rows[1] for rows in data_reader}
