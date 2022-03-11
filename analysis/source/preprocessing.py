@@ -10,7 +10,7 @@ from dgg_log import root_logger
 logger = root_logger.getChild(__name__)
 
 
-def preprocess_counts_from_bucket(batch_string, estimate='mau'):
+def get_bucket_estimates(batch_string):
 	"""Retrieve a dataset from the bucket and create a csv file of the collected facebook counts"""
 	s3_bucket = S3Bucket()
 	batch_s3_folder = 'data/{timestamp}'.format(timestamp=batch_string)
@@ -27,13 +27,20 @@ def preprocess_counts_from_bucket(batch_string, estimate='mau'):
 				logger.warning('Cannot find data store for {date}'.format(date=batch_string))
 				return
 
-	estimates = json.loads(response['Body'].read())
+	estimates1 = json.loads(response['Body'].read())
+	return estimates1
 
-	preprocess_counts(batch_string, estimates, estimate)
+
+def preprocess_counts_from_bucket(batch_string, estimate='mau'):
+
+	estimates1 = get_bucket_estimates(batch_string)
 
 	counts_csv_filename = '{estimate}_counts_{timestamp}.csv'.format(estimate=estimate, timestamp=batch_string)
 	counts_csv_filepath = os.path.join(data_path, counts_csv_filename)
 
+	preprocess_counts(batch_string, counts_csv_filepath, estimates1, estimate)
+
+	s3_bucket = S3Bucket()
 	with open(counts_csv_filepath, 'rb') as countfile:
 		key = '{folder}/{file}'.format(folder=batch_s3_folder, file=counts_csv_filename)
 		s3_bucket.put(key, countfile)
@@ -138,6 +145,8 @@ def preprocess_counts(batch_string, counts_csv_filepath, estimates, estimate='ma
 
 				for ratio, facebookkey in device_ratios.items():
 					try:
+						row[ratio + '_women'] = country['women']['18+'][facebookkey][estimate_key]
+						row[ratio + '_men'] = country['men']['18+'][facebookkey][estimate_key]
 						row[ratio] = country['women']['18+'][facebookkey][estimate_key] / country['men']['18+'][facebookkey][estimate_key]
 					except ZeroDivisionError:
 						logger.warning("Ratio problem in {country}, {key} male user count is 0".format(country=country_key, key=facebookkey))
