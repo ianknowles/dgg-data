@@ -56,11 +56,11 @@ fits_file <- file.path(output_path, "fits.csv", fsep = "\\")
 get_data_column_to_use <- function(datas, variable_base_name, year) {
   current_year <- as.numeric(year)
   
-  I <- grepl(paste("^",variable_base_name,"_[0-9]{4}",sep=""), colnames(datas))
+  I <- grepl(paste0("^", variable_base_name, "_[0-9]{4}"), colnames(datas))
   if (sum(I) == 0) { return(NULL)}
   
   # the variable exists in the dataframe; get the appropriate year of data
-  years_of_data <- as.numeric(gsub(paste("^",variable_base_name,"_([0-9]{4})",sep=""), "\\1", colnames(datas)[I]))
+  years_of_data <- as.numeric(gsub(paste0("^", variable_base_name, "_([0-9]{4})"), "\\1", colnames(datas)[I]))
   years_of_data <- years_of_data[years_of_data <= current_year]
   
   if (length(years_of_data) == 0) { return(NULL)} # no data before current year
