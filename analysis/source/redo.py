@@ -1,7 +1,7 @@
 import json
 import os
 
-from analysis.r_analysis_wrapper import predict
+from r_analysis_wrapper import predict
 from dgg_log import root_logger
 from storage.S3_bucket import S3Bucket
 from storage.dgg_file_structure import auth_path

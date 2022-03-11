@@ -2,9 +2,9 @@
 import datetime
 import os
 
-from analysis import r_language
+import r_language
 from storage.S3_bucket import S3Bucket
-from analysis.preprocessing import preprocess_analysis_data
+from preprocessing import preprocess_analysis_data
 from dgg_log import logging_setup
 from dgg_log import root_logger
 
