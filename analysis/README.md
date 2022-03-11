@@ -32,3 +32,10 @@ Output will be saved to a folder under `output`, e.g. `2022-02`.
 
 ## Running the monthly analysis
 Running `monthly.py` will run an analysis for `2022-02` locally. Changing the class in `monthly_analysis_task` from `MonthlyAnalysis` to `MonthlyAnalysisBucket` will automatically upload results to the bucket and update the monthly analysis index.
+See [Analysis Index](https://github.com/ianknowles/dgg-data/wiki/Analysis-Index) for more detail.
+
+# See also
+* [Accessing the S3 Bucket](https://github.com/ianknowles/dgg-data/wiki/Accessing-the-S3-Bucket)
+* [Analysis](https://github.com/ianknowles/dgg-data/wiki/Analysis)
+* [Analysis Index](https://github.com/ianknowles/dgg-data/wiki/Analysis-Index)
+* [S3 Storage Scheme](https://github.com/ianknowles/dgg-data/wiki/S3-Storage-Scheme)
