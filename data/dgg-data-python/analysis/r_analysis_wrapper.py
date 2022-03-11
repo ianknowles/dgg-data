@@ -96,12 +96,19 @@ def redo_analysis():
 		s3_keys = json.load(key_file)
 		client = boto3.client('s3', **s3_keys)
 
+	from analysis.analysis_index import ModelIndexFile
+	s3_bucket = S3Bucket()
+	index = ModelIndexFile(s3_bucket, 'data/models2.json')
+
 	paginator = client.get_paginator('list_objects')
 	result = paginator.paginate(Bucket='www.digitalgendergaps.org', Prefix='data/', Delimiter='/')
 	for prefix in result.search('CommonPrefixes'):
 		batch_string = prefix['Prefix'].split('/')[1]
 		try:
-			predict(batch_string)
+			mau_key = predict(batch_string)
+
+			index.add_entry(batch_string, mau_key)
+			predict(batch_string, 'dau')
 		except Exception as e:
 			logger.error('Exception in batch {x}, {e}'.format(x=batch_string, e=e))
 
