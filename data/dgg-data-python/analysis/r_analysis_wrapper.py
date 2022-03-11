@@ -54,13 +54,13 @@ def predict(batch_string, estimate='mau'):
 
 	logger.info('Beginning analysis')
 	r_exe = r_language.RExecutable()
-	r_exe.run_script(os.path.join(r_path, "Digital_gender_gaps_analysis.R"), '')
+	r_exe.run_script(os.path.join(r_path, "Digital_gender_gaps_analysis_updated_7Nov2019.R"), [f'{estimate}_counts_{batch_string}.csv'])
 	logger.info('Analysis complete')
 
 	batch_s3_folder = f'data/{batch_string}'
 	key = ''
 	with open(os.path.join(data_path, 'Appendix_table_model_predictions.csv'), 'rb') as file:
-		filename = f'{estimate}_monthly_model_{batch_string}.csv'
+		filename = f'{estimate}_monthly_model_2_{batch_string}.csv'
 		key = f'{batch_s3_folder}/{filename}'
 		s3_bucket.put(key, file)
 		logger.info(f'Uploaded {filename}')
