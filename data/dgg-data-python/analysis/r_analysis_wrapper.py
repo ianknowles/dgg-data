@@ -65,6 +65,11 @@ def predict(batch_string, estimate='mau'):
 		s3_bucket.put(key, file)
 		logger.info(f'Uploaded {filename}')
 
+	with open(os.path.join(data_path, 'fits.csv'), 'rb') as file:
+		filename = f'{estimate}_monthly_model_2_{batch_string}_fits.csv'
+		fit_key = f'{batch_s3_folder}/{filename}'
+		s3_bucket.put(fit_key, file)
+		logger.info(f'Uploaded {filename}')
 	return key
 
 
