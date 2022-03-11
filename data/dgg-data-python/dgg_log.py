@@ -24,6 +24,8 @@ def logging_setup(log_path):
 
 				time_stamp_string = datetime.datetime.now().isoformat().replace(':', '.')
 				log_filepath = os.path.join(log_path, f'{time_stamp_string}.log')
+				if not os.path.exists(log_path):
+					os.makedirs(log_path)
 
 				config_dict['handlers']['file']['filename'] = log_filepath
 				logging.config.dictConfig(config_dict)
