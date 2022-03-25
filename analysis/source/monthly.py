@@ -64,16 +64,17 @@ csv_columns = {
 	"FB_age_65_plus_men": {'age_group': '65+', 'gender': 'men', 'behavior': ''},
 	"FB_age_65_plus_women": {'age_group': '65+', 'gender': 'women', 'behavior': ''},
 
-	"FB_android_device_users_ratio_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'All Android devices'},
-	"FB_android_device_users_ratio_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'All Android devices'},
-	"FB_iOS_device_users_ratio_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'All iOS Devices'},
-	"FB_iOS_device_users_ratio_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'All iOS Devices'},
-	"FB_mobile_device_users_ratio_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'All Mobile Devices'},
-	"FB_mobile_device_users_ratio_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'All Mobile Devices'},
-	"FB_feature_phone_users_ratio_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'Feature Phone'},
-	"FB_feature_phone_users_ratio_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'Feature Phone'},
-	"FB_iPhone7_users_ratio_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'iphone 7'},
-	"FB_iPhone7_users_ratio_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'iphone 7'},
+	# Older collections may have slightly different key for these columns e.g. FB_android_device_users_ratio_women
+	"FB_android_device_users_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'All Android devices'},
+	"FB_android_device_users_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'All Android devices'},
+	"FB_iOS_device_users_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'All iOS Devices'},
+	"FB_iOS_device_users_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'All iOS Devices'},
+	"FB_mobile_device_users_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'All Mobile Devices'},
+	"FB_mobile_device_users_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'All Mobile Devices'},
+	"FB_feature_phone_users_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'Feature Phone'},
+	"FB_feature_phone_users_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'Feature Phone'},
+	"FB_iPhone7_users_women": {'age_group': '18+', 'gender': 'women', 'behavior': 'iphone 7'},
+	"FB_iPhone7_users_men": {'age_group': '18+', 'gender': 'men', 'behavior': 'iphone 7'},
 
 	"FB_smartphone_owners_ratio": {'age_group': '18+', 'gender': 'all', 'behavior': 'SmartPhone Owners'},
 }
