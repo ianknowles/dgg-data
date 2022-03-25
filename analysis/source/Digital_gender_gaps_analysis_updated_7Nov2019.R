@@ -34,9 +34,9 @@ mobile_GG_models_file <- "../models/Mobile_GG_models_selected_by_stepwise_cv_sma
 
 ## output files
 output_path <- args[2]
-model_predictions_file <- file.path(output_path, "Appendix_table_model_predictions.csv", fsep = "\\")
-correlations_file <- file.path(output_path, "GroundTruth_correlations_table.csv", fsep = "\\")
-fits_file <- file.path(output_path, "fits.csv", fsep = "\\")
+model_predictions_file <- file.path(output_path, "Appendix_table_model_predictions.csv")
+correlations_file <- file.path(output_path, "GroundTruth_correlations_table.csv")
+fits_file <- file.path(output_path, "fits.csv")
 
 ## ----
 #  Helper functions
