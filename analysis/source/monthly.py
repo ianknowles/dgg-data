@@ -130,7 +130,7 @@ class MonthlyAnalysis:
 		# monthly_check(year, month, estimate)
 
 	def get_bucket_counts(self):
-		s3_bucket = S3Bucket(s3_auth)
+		s3_bucket = S3Bucket(key_filepath=s3_auth)
 		logger.info(f"Getting count files for '{self.month_datestamp}' from '{self.s3_counts_root_folder}'")
 
 		for date in self.days_dates:
@@ -275,7 +275,7 @@ class MonthlyAnalysisBucket(MonthlyAnalysis):
 		self.upload_outputs()
 
 	def upload_outputs(self):
-		s3_bucket = S3Bucket(s3_auth)
+		s3_bucket = S3Bucket(key_filepath=s3_auth)
 
 		with open(self.prediction_filepath, 'rb') as file:
 			s3_bucket.put(self.s3_model_predictions_key, file)
