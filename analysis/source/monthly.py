@@ -11,11 +11,13 @@ from r_analysis_wrapper import predict_from_file
 from analysis_index import ModelIndexFile
 
 from dgg_log import logging_setup, root_logger
-from paths import count_path, r_path, output_path, log_path
+from paths import count_path, r_path, output_path, log_path, auth_path
 from storage.S3_bucket import S3Bucket
 
 
 logger = root_logger.getChild(__name__)
+
+s3_auth = os.path.join(auth_path, 'S3_keys.json')
 
 csv_columns = {
 	"FB_all": {'age_group': '18+', 'gender': 'all', 'behavior': ''},
@@ -128,7 +130,7 @@ class MonthlyAnalysis:
 		# monthly_check(year, month, estimate)
 
 	def get_bucket_counts(self):
-		s3_bucket = S3Bucket()
+		s3_bucket = S3Bucket(s3_auth)
 		logger.info(f"Getting count files for '{self.month_datestamp}' from '{self.s3_counts_root_folder}'")
 
 		for date in self.days_dates:
@@ -273,7 +275,7 @@ class MonthlyAnalysisBucket(MonthlyAnalysis):
 		self.upload_outputs()
 
 	def upload_outputs(self):
-		s3_bucket = S3Bucket()
+		s3_bucket = S3Bucket(s3_auth)
 
 		with open(self.prediction_filepath, 'rb') as file:
 			s3_bucket.put(self.s3_model_predictions_key, file)
