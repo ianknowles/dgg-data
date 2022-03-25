@@ -294,4 +294,5 @@ def monthly_analysis_task(year, month, estimate):
 
 
 if __name__ == "__main__":
-	monthly_analysis_task(2022, 2, 'mau')
+	previous_month = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
+	monthly_analysis_task(previous_month.year, previous_month.month, 'mau')
