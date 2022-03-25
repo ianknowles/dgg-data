@@ -22,7 +22,7 @@ class S3Bucket:
 				s3_keys = json.load(key_file)
 				self.client = boto3.client('s3', **s3_keys)
 		except EnvironmentError:
-			logger.error('S3 credentials missing')
+			logger.error(f'S3 credentials failed to load from {key_filepath}')
 
 	def put(self, file_key, file_body):
 		"""Put a binary file stream into the bucket with the given remote filepath"""
