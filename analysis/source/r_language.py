@@ -1,6 +1,7 @@
 """Classes for interacting with the R language"""
 import os
 import subprocess
+import sys
 
 from dgg_log import root_logger
 
@@ -9,12 +10,20 @@ logger = root_logger.getChild(__name__)
 
 class RExecutable:
 	"""Represents the R script executable in a local install. Capable of running R language scripts"""
-	def __init__(self):
-		# TODO find the install path, or just place in config file?
-		self.filepath = 'C:\\Program Files\\R\\R-3.5.0\\bin\\Rscript.exe'
+	def __init__(self, filepath=''):
+		# TODO check standard env variables, R_HOME?
+		self.filepath = filepath
 		if not os.path.isfile(self.filepath):
-			logger.error(f'Cannot find R executable {self.filepath}')
-			raise FileNotFoundError
+			if sys.platform.startswith('win32'):
+				# TODO try other versions in the R folder
+				self.filepath = 'C:\\Program Files\\R\\R-3.5.0\\bin\\Rscript.exe'
+			elif sys.platform.startswith('linux'):
+				self.filepath = '/usr/lib/R/bin/Rscript'
+			if os.path.isfile(self.filepath):
+				logger.info(f'Found R executable {self.filepath}')
+			else:
+				logger.error(f'Cannot find R executable {self.filepath}')
+				raise FileNotFoundError
 
 	def run_script(self, script_filepath, args):
 		"""Run the given R script with the R executable and log its output"""
